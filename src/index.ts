@@ -1,5 +1,4 @@
 import {
-  buildAutomationKey,
   findMaxLcDay,
   getNextDate,
   getNextLcTitle,
@@ -23,14 +22,10 @@ async function main(): Promise<void> {
     titleProperty: config.titleProperty,
     teamProperty: config.teamProperty,
     targetTeam: config.targetTeam,
-    automationKeyProperty: config.automationKeyProperty,
     deadlineProperty: config.deadlineProperty,
   });
 
   const titles = pages.map((page) => page.title);
-  const existingAutomationKeys = pages
-    .map((page) => page.automationKey)
-    .filter((key): key is string => Boolean(key));
 
   const maxDay = findMaxLcDay(titles);
   const nextTitle = getNextLcTitle(maxDay, config.titlePrefix);
@@ -53,12 +48,10 @@ async function main(): Promise<void> {
   }
 
   const nextDate = latestPage?.date ? getNextDate(latestPage.date) : today;
-  const automationKey = buildAutomationKey(config.targetTeam, nextDate);
 
   console.log(`Found ${lcPageCount} ${config.targetTeam} LC pages`);
   console.log(`Current max day: ${maxDay}`);
   console.log(`Next date: ${nextDate}`);
-  console.log(`Automation key: ${automationKey}`);
   console.log(`Creating: ${nextTitle}`);
 
   await createLcPage(client, {
@@ -67,12 +60,10 @@ async function main(): Promise<void> {
     statusProperty: config.statusProperty,
     teamProperty: config.teamProperty,
     deadlineProperty: config.deadlineProperty,
-    automationKeyProperty: config.automationKeyProperty,
     title: nextTitle,
     status: config.defaultStatus,
     team: config.targetTeam,
     isoDate: nextDate,
-    automationKey,
   });
 
   console.log("Done");

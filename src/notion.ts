@@ -5,7 +5,6 @@ type GetInterviewLcPagesArgs = {
   titleProperty: string;
   teamProperty: string;
   targetTeam: string;
-  automationKeyProperty: string;
   deadlineProperty: string;
 };
 
@@ -15,12 +14,10 @@ type CreateLcPageArgs = {
   statusProperty: string;
   teamProperty: string;
   deadlineProperty: string;
-  automationKeyProperty: string;
   title: string;
   status: string;
   team: string;
   isoDate: string;
-  automationKey: string;
 };
 
 const LC_PAGE_ICON = "🧩";
@@ -29,7 +26,6 @@ type PageProperties = Record<string, unknown>;
 export type LcPageSummary = {
   id: string;
   title: string;
-  automationKey?: string;
   date?: string;
 };
 
@@ -69,15 +65,6 @@ function getTitleValue(
     : undefined;
 }
 
-function getRichTextValue(
-  properties: PageProperties,
-  name: string
-): string | undefined {
-  const property = properties[name];
-  return hasPropertyType(property, "rich_text")
-    ? readPlainText(property.rich_text)
-    : undefined;
-}
 
 function getSelectValue(
   properties: PageProperties,
@@ -121,7 +108,6 @@ function buildLcPageSummary(
   return {
     id,
     title: getTitleValue(properties, args.titleProperty) ?? "",
-    automationKey: getRichTextValue(properties, args.automationKeyProperty),
     date: getDateValue(properties, args.deadlineProperty),
   };
 }
@@ -198,15 +184,6 @@ export async function createLcPage(
         date: {
           start: args.isoDate,
         },
-      },
-      [args.automationKeyProperty]: {
-        rich_text: [
-          {
-            text: {
-              content: args.automationKey,
-            },
-          },
-        ],
       },
     },
   });

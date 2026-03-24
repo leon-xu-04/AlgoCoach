@@ -86,14 +86,3 @@ export function getNextDate(latestDate: string): string {
   return formatIsoDate(parsed);
 }
 
-export function buildAutomationKey(team: string, isoDate: string): string {
-  const normalizedTeam = team.trim().toLowerCase().replace(/\s+/g, "-");
-  return `lc-daily-${normalizedTeam}-${isoDate}`;
-}
-
-export function shouldCreatePage(
-  existingAutomationKeys: string[],
-  candidateKey: string
-): boolean {
-  return !existingAutomationKeys.includes(candidateKey);
-}

@@ -22,7 +22,6 @@ export const config = {
   statusProperty: envValue("NOTION_STATUS_PROPERTY"),
   teamProperty: envValue("NOTION_TEAM_PROPERTY"),
   deadlineProperty: envValue("NOTION_DEADLINE_PROPERTY"),
-  automationKeyProperty: envValue("AUTOMATION_KEY_PROPERTY"),
   targetTeam: envValue("TARGET_TEAM"),
   defaultStatus: envValue("DEFAULT_STATUS"),
   titlePrefix: envValue("TITLE_PREFIX"),
