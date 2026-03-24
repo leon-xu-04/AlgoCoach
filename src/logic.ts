@@ -20,14 +20,6 @@ function parseIsoDate(date: string): Date | null {
   const day = Number(match[3]);
   const parsed = new Date(Date.UTC(year, month - 1, day));
 
-  if (
-    parsed.getUTCFullYear() !== year ||
-    parsed.getUTCMonth() !== month - 1 ||
-    parsed.getUTCDate() !== day
-  ) {
-    return null;
-  }
-
   return parsed;
 }
 
@@ -55,25 +47,6 @@ export function findMaxLcDay(titles: string[]): number {
 
 export function getNextLcTitle(maxDay: number, prefix: string): string {
   return `${prefix.trimEnd()} ${maxDay + 1}`;
-}
-
-export function getTodayIsoDate(timeZone: string, now: Date = new Date()): string {
-  const formatter = new Intl.DateTimeFormat("en-US", {
-    timeZone,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
-  const parts = formatter.formatToParts(now);
-  const year = parts.find((part) => part.type === "year")?.value;
-  const month = parts.find((part) => part.type === "month")?.value;
-  const day = parts.find((part) => part.type === "day")?.value;
-
-  if (!year || !month || !day) {
-    throw new Error(`Unable to format date for time zone: ${timeZone}`);
-  }
-
-  return `${year}-${month}-${day}`;
 }
 
 export function getNextDate(latestDate: string): string {

@@ -2,7 +2,6 @@ import {
   findMaxLcDay,
   getNextDate,
   getNextLcTitle,
-  getTodayIsoDate,
   parseLcDayNumber,
 } from "./logic";
 import {
@@ -29,7 +28,6 @@ async function main(): Promise<void> {
 
   const maxDay = findMaxLcDay(titles);
   const nextTitle = getNextLcTitle(maxDay, config.titlePrefix);
-  const today = getTodayIsoDate(config.timeZone);
 
   let lcPageCount = 0;
   let latestPage: (typeof pages)[number] | null = null;
@@ -47,7 +45,15 @@ async function main(): Promise<void> {
     }
   }
 
-  const nextDate = latestPage?.date ? getNextDate(latestPage.date) : today;
+  if (!latestPage) {
+    throw new Error(`No ${config.targetTeam} LC page found with a valid day number.`);
+  }
+  if (!latestPage.date) {
+    throw new Error(
+      `Latest LC page "${latestPage.title}" is missing ${config.deadlineProperty}.`
+    );
+  }
+  const nextDate = getNextDate(latestPage.date);
 
   console.log(`Found ${lcPageCount} ${config.targetTeam} LC pages`);
   console.log(`Current max day: ${maxDay}`);
