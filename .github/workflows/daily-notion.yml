@@ -1,0 +1,48 @@
+name: Daily Notion LC Page
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 22 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-notion-lc-page
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Run daily Notion job
+        run: npm start
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+          NOTION_TITLE_PROPERTY: ${{ 'Name' }}
+          NOTION_STATUS_PROPERTY: ${{ 'Status' }}
+          NOTION_TEAM_PROPERTY: ${{ 'Team' }}
+          NOTION_DEADLINE_PROPERTY: ${{ 'Deadline' }}
+          TARGET_TEAM: ${{ 'Interview' }}
+          DEFAULT_STATUS: ${{ 'In progress' }}
+          TITLE_PREFIX: "${{ 'LC: Day' }}"
+          TIME_ZONE: America/New_York
